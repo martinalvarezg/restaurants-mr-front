@@ -1,0 +1,7 @@
+.map-container {
+    position: relative;
+    z-index: 1; /* Adjust the value as needed */
+  }
+  .map-container {
+    max-height: 80vh; /* Adjust the value as needed */
+  }
