@@ -24,11 +24,10 @@ function App() {
     <body>
     <div className='container-fluid'>
       <div class="row">
-      <div className='col-3'>
+      <div className='col-3 text-bg-dark'>
         <Navbar></Navbar>
       </div>
       <div className='col-9'>
-        <h2>Map Search</h2>
         <MainMap></MainMap>
       </div>
     </div>
