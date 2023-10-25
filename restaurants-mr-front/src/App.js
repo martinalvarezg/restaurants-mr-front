@@ -1,9 +1,24 @@
 import logo from './logo.svg';
 import './App.css';
 import  Navbar from './navbar/Navbar'
-import MainMap from './MainMap.js/MainMap';
+import MainMap from './MainMap/MainMap';
+import Dashboard from './Dashboard/Dashboard';
+import React, { useEffect, useState } from 'react';
 
 function App() {
+
+  const [restaurants, setRestaurants] = useState(null);
+
+  useEffect(() => {
+    fetch('https://mr-restuarant-bogota.s3.us-east-2.amazonaws.com/restaurants_sample.json')
+    .then((response) => response.json())
+    .then((json => {
+      setRestaurants(json);
+      console.log(restaurants)
+    }))
+  }, []);
+
+
   return (
     <div className="App">
     <head>
@@ -28,7 +43,8 @@ function App() {
         <Navbar></Navbar>
       </div>
       <div className='col-9'>
-        <MainMap></MainMap>
+        <MainMap/>
+        <Dashboard data={restaurants} />
       </div>
     </div>
     </div>
