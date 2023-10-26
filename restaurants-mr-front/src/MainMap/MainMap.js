@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Polygon, GeoJSON} from 'react-leaflet';
+import { MapContainer, TileLayer, Polygon, GeoJSON, Circle} from 'react-leaflet';
 
 const center = [4.605, -74.09]; // Default map center coordinates
-const purpleOptions = { color: 'purple' }; // Poligons coordinates
+const fillBlueOptions = { stroke: false, fillColor: 'blue' }
+
+const addressPoints = [{center:[4.6139966,-74.0756006]},{center:[4.6129966,-74.0756006]},
+
+{center:[4.6119966,-74.0756006]},{center:[4.6039659,-74.0756006]},{center:[4.6037598,-74.0756006]}
+]
 
 function MainMap(){
 
@@ -30,13 +35,17 @@ function MainMap(){
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
           attribution='&copy;<a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-    
+    {addressPoints.map((ele) => (
+      <Circle center={ele.center} pathOptions={fillBlueOptions} radius={100} />
+    ))}
+
+
     {upzs && (
         <GeoJSON data={upzs} style={{ fillColor: 'purple', color: 'black',  weight: 1 }} />
       )}
 
 
-      </MapContainer>
+      </MapContainer >
       </div>
       )
 
