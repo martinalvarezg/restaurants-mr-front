@@ -4,6 +4,7 @@ import  Navbar from './navbar/Navbar'
 import MainMap from './MainMap/MainMap';
 import Dashboard from './Dashboard/Dashboard';
 import React, { useEffect, useState } from 'react';
+import { Routes, Route , Router } from "react-router-dom"
 
 function App() {
 
@@ -18,7 +19,7 @@ function App() {
     }))
   }, []);
 
-
+//  <Dashboard data={restaurants} />
   return (
     <div className="App">
     <head>
@@ -43,8 +44,12 @@ function App() {
         <Navbar></Navbar>
       </div>
       <div className='col-9'>
-        <MainMap/>
-        <Dashboard data={restaurants} />
+   
+      <Routes>
+        <Route path="/" element={<MainMap/>}/>
+        <Route path="/dashboard" element={<Dashboard data={restaurants}/>}/>
+      </Routes>
+      
       </div>
     </div>
     </div>

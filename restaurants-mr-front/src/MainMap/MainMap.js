@@ -12,6 +12,7 @@ const addressPoints = [{center:[4.6139966,-74.0756006]},{center:[4.6129966,-74.0
 function MainMap(){
 
   const [upzs, setUpzs] = useState(null);
+  const [addressPoints, setAddressPoints] = useState(null);
   const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -19,6 +20,14 @@ function MainMap(){
       .then((response) => response.json())
       .then((json) => { 
         setUpzs(json.features);
+
+      });
+
+      fetch('https://mr-restuarant-bogota.s3.us-east-2.amazonaws.com/restaurants_loc_sample.json')
+      .then((response) => response.json())
+      .then((json) => { 
+        console.log('Locs', json)
+        setAddressPoints(json);
         setLoading(false); 
       });
     }, []);
@@ -30,13 +39,13 @@ function MainMap(){
 
     return(
         <div className="map-container">
-        <MapContainer center={center} zoom={12} style={{ height: '400px', width: '100%' }}>
+        <MapContainer center={center} zoom={12} style={{ height: '100vh', width: '100%' }}>
         <TileLayer
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
           attribution='&copy;<a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
     {addressPoints.map((ele) => (
-      <Circle center={ele.center} pathOptions={fillBlueOptions} radius={100} />
+      <Circle center={ele.center} pathOptions={fillBlueOptions} radius={25} />
     ))}
 
 
