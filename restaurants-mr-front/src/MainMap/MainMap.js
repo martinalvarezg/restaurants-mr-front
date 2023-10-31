@@ -22,7 +22,7 @@ function MainMap(){
 
     const onEachFeature = (feature, layer) => {
 
-      isGeoJSONValid(upzs)
+      //isGeoJSONValid(upzs)
       // Attach a click event handler to each GeoJSON feature
       layer.on("click", (e) => {
         // Access the coordinates of the clicked feature
@@ -30,8 +30,8 @@ function MainMap(){
 
         // Trigger your event based on the coordinates
         //console.log("Clicked at:", coordinates);
-        var loc = findPolygonContainingPoint(upzs,coordinates) 
-        console.log("Loc: ",loc);
+        //var loc = findPolygonContainingPoint(upzs,coordinates) 
+        //console.log("Loc: ",loc);
       });
     }
 
