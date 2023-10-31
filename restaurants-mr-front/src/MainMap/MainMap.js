@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Polygon, GeoJSON, Circle} from 'react-leaflet';
+import { isPolygon, isFeatureCollection } from 'geojson-validation';
+import * as turf from "@turf/turf"; 
 
 const center = [4.605, -74.09]; // Default map center coordinates
 const fillBlueOptions = { stroke: false, fillColor: 'blue' }
@@ -15,21 +17,75 @@ function MainMap(){
   const [addressPoints, setAddressPoints] = useState(null);
   const [loading, setLoading] = useState(true);
 
+
+
+
+    const onEachFeature = (feature, layer) => {
+
+      isGeoJSONValid(upzs)
+      // Attach a click event handler to each GeoJSON feature
+      layer.on("click", (e) => {
+        // Access the coordinates of the clicked feature
+        const coordinates = e.latlng;
+
+        // Trigger your event based on the coordinates
+        //console.log("Clicked at:", coordinates);
+        var loc = findPolygonContainingPoint(upzs,coordinates) 
+        console.log("Loc: ",loc);
+      });
+    }
+
+
+    const isGeoJSONValid = (geojson) => {
+      if (isFeatureCollection(geojson)) {
+        for (const feature of geojson.features) {
+          try{
+          if (!isPolygon(feature.geometry)) {
+            return false; // Not a valid Polygon
+          }
+        }
+          catch(err) {
+              console.log("Error", feature) ;
+          }
+        }
+        console.log(true)
+        return true;
+      }
+      return false; // Not a valid FeatureCollection
+    };
+
+
+
+    const findPolygonContainingPoint = (geojson, coordinates) => {
+      
+      const point = turf.point([coordinates.lat, coordinates.lng]);
+      console.log(geojson)
+      for (const feature of geojson) {
+        console.log(feature)
+        if (turf.booleanPointInPolygon(point,turf.polygon(feature.geometry.coordinates))) {
+          return feature;
+        }
+      }
+    
+      return null; // No polygon found
+    };
+
     useEffect(() => {
+
       fetch('https://mr-restuarant-bogota.s3.us-east-2.amazonaws.com/poblacion-upz-bogota.geojson')
       .then((response) => response.json())
       .then((json) => { 
         setUpzs(json.features);
-
+        isGeoJSONValid(upzs);
       });
 
       fetch('https://mr-restuarant-bogota.s3.us-east-2.amazonaws.com/restaurants_loc_sample.json')
       .then((response) => response.json())
       .then((json) => { 
-        console.log('Locs', json)
         setAddressPoints(json);
         setLoading(false); 
       });
+      
     }, []);
 
     if(loading)
@@ -50,7 +106,10 @@ function MainMap(){
 
 
     {upzs && (
-        <GeoJSON data={upzs} style={{ fillColor: 'purple', color: 'black',  weight: 1 }} />
+        <GeoJSON data={upzs} 
+        style={{ fillColor: 'purple', color: 'black',  weight: 1 }}
+        onEachFeature={onEachFeature} 
+        />
       )}
 
 
