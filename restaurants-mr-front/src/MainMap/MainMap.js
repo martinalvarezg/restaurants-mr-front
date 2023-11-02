@@ -25,7 +25,6 @@ function MainMap(){
         const coordinates = e.latlng;
 
         // Trigger your event based on the coordinates
-        console.log("Clicked at:", coordinates);
         var loc = findPolygonContainingPoint(upzs,coordinates) 
         navigate({
           pathname: '/dashboard',
@@ -37,9 +36,7 @@ function MainMap(){
     const findPolygonContainingPoint = (geojson, coordinates) => {
       
       const point = turf.point([coordinates.lng, coordinates.lat]);
-      console.log(point)
       for (const feature of geojson) {
-        console.log(feature)
         try{
         if (turf.booleanPointInPolygon(point,turf.polygon(feature.geometry.coordinates))) {
           return feature;
