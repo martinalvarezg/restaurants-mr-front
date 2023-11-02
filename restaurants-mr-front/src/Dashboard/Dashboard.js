@@ -1,7 +1,8 @@
 import {BarChart, CartesianGrid,XAxis,YAxis,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
+import { useSearchParams } from 'react-router-dom';
 
 function Dashboard(props){
-
+  const [searchParams] = useSearchParams();
 if (!props.data) {
     // Data hasn't arrived yet, render a loading message or placeholder
     return <p>Loading data...</p>;
@@ -68,8 +69,12 @@ var ratingCount = generateHistogram(props.data, "rating");
 
 return(
     <div className='container'>
+      <div className='row'>
+        <h2>{searchParams.get('loc')}</h2>
+      </div>
         <div className='row'>
             <div className='col-6'>
+              <h4>Clasificación Google</h4>
                 <BarChart width={400} height={250} data={typeeCount}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name"  minTickGap={0} tick={{ fontSize: 11 }} height={100} dx={-15} dy={40} angle={-75} />
@@ -80,6 +85,7 @@ return(
                 </BarChart>
             </div>
             <div className='col-6'>
+            <h4>Rating Google</h4>
                 <BarChart width={400} height={250} data={ratingCount}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name"  minTickGap={0} tick={{ fontSize: 11 }} height={100} dx={-15} dy={40} angle={-75} />
@@ -90,7 +96,7 @@ return(
                 </BarChart>
             </div>
         </div>
-    <h2>Dashaboard</h2>
+    <h4>Lista de restaurantes</h4>
    
 
     <table className="table">
