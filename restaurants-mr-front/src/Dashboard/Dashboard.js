@@ -1,12 +1,25 @@
 import {BarChart, CartesianGrid,XAxis,YAxis,Tooltip,Legend,Bar,ResponsiveContainer} from 'recharts'
+import { useSearchParams } from 'react-router-dom';
 
 function Dashboard(props){
+  const [searchParams] = useSearchParams();
+  var upz ='';
+  var records = [];
 
 if (!props.data) {
     // Data hasn't arrived yet, render a loading message or placeholder
     return <p>Loading data...</p>;
   }
 
+  if(searchParams.get('loc')){
+    upz =searchParams.get('loc');
+    records = props.data.filter(rec => rec.upz == upz);
+  }
+  else{
+    upz = 'Bogotá'
+    records = props.data;
+  }
+ 
 function countDistinctValues(objList, key) {
     const distinctValueCounts = {};
     
@@ -62,14 +75,18 @@ function countDistinctValues(objList, key) {
 
 
 
-var typeeCount = countDistinctValues(props.data, "type");
-var ratingCount = generateHistogram(props.data, "rating");
+var typeeCount = countDistinctValues(records, "type");
+var ratingCount = generateHistogram(records, "rating");
 
 
 return(
     <div className='container'>
+      <div className='row'>
+        <h2>{upz}</h2>
+      </div>
         <div className='row'>
             <div className='col-6'>
+              <h4>Clasificación Google</h4>
                 <BarChart width={400} height={250} data={typeeCount}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name"  minTickGap={0} tick={{ fontSize: 11 }} height={100} dx={-15} dy={40} angle={-75} />
@@ -80,6 +97,7 @@ return(
                 </BarChart>
             </div>
             <div className='col-6'>
+            <h4>Rating Google</h4>
                 <BarChart width={400} height={250} data={ratingCount}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name"  minTickGap={0} tick={{ fontSize: 11 }} height={100} dx={-15} dy={40} angle={-75} />
@@ -90,7 +108,7 @@ return(
                 </BarChart>
             </div>
         </div>
-    <h2>Dashaboard</h2>
+    <h4>Lista de restaurantes</h4>
    
 
     <table className="table">
@@ -103,7 +121,7 @@ return(
         </tr>
     </thead>
     <tbody>
-    {props.data.map((rest, index) => (
+    {records.map((rest, index) => (
       <tr key={index}>
         <th scope="row">{index + 1}</th>
         <td>{rest.name}</td>
